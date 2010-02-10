@@ -2,28 +2,34 @@ try:
     import xml.etree.cElementTree as ET
 except ImportError:
     import xml.etree.ElementTree  as ET
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
 
 class XMLTree(object):
-    nodes = {}
-
     def __init__(self, node):
+        self.nodes = {}
         self.node = node
         for n in node:
-            if n.tag in self.nodes:
-                if len(self.nodes[n.tag]) == 1:
-                    self.nodes[n.tag] = [self.nodes[n.tag]]
-            else:
-                self.nodes[n.tag] = None
-
             if len(n.getchildren()):
-                wrapper = XMLTree
+                xmlnode = XMLTree(n)
             else:
-                wrapper = XMLNode
+                xmlnode = XMLNode(n)
+            if n.tag in self.nodes:
+                if isinstance(self.nodes[n.tag], (XMLTree, XMLNode)):
+                    self.nodes[n.tag] = [self.nodes[n.tag], xmlnode]
+                else:
+                    self.nodes[n.tag].append(xmlnode)
+            else:
+                self.nodes[n.tag] = xmlnode
 
-            if self.nodes[n.tag] != None and len(self.nodes[n.tag]):
-                self.nodes[n.tag].append(wrapper(n))
-            else:
-                self.nodes[n.tag] = wrapper(n)
+    def __unicode__(self):
+        return unicode(dict((k, str(v)) for k, v in self.nodes.iteritems()))
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')
 
     def __getattr__(self, attr):
         return self.nodes[attr]
@@ -34,6 +40,7 @@ class XMLTree(object):
     def __len__(self):
         return len(self.nodes)
 
+
 class XMLNode(object):
     def __init__(self, node):
         self.node = node
@@ -42,7 +49,10 @@ class XMLNode(object):
         return self.node.attrib.get(key)
 
     def __unicode__(self):
-        return self.node.text
+        return self.node.text or ''
+
+    def __str__(self):
+        return unicode(self).encode('utf-8')
 
     def __repr__(self):
         return self.__unicode__()
@@ -50,9 +60,15 @@ class XMLNode(object):
     def __len__(self):
         return 1
 
+
 def parse(file):
     tree = ET.parse(file)
     return XMLTree(tree.getroot())
+
+
+def parsestring(s):
+    return parse(StringIO(s))
+
 
 if __name__ == "__main__":
     xml = parse("fixture.xml")
