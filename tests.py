@@ -35,5 +35,24 @@ class TestSimpleXML(unittest.TestCase):
         }
 
 
+class TestXMLNodeComparison(unittest.TestCase):
+    def setUp(self):
+        self.xml = simplexml.parsestring('''<?xml version="1.0" encoding="UTF-8"?>
+            <test>
+                <string>Test</string>
+                <integer>123</integer>
+            </test>
+            ''')
+
+    def test_strings(self):
+        self.assertEquals('Test', self.xml.string)
+        self.assertEquals(u'Test', self.xml.string)
+        self.assertNotEquals(123, self.xml.string)
+
+    def test_integers(self):
+        self.assertNotEquals('Test', self.xml.integer)
+        self.assertEquals(123, self.xml.integer)
+
+
 if __name__ == '__main__':
     unittest.main()
