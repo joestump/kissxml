@@ -54,11 +54,29 @@ class XMLNode(object):
     def __str__(self):
         return unicode(self).encode('utf-8')
 
+    def __int__(self):
+        return int(self.node.text)
+
     def __repr__(self):
         return self.__unicode__()
 
     def __len__(self):
         return 1
+
+    def __eq__(self, value):
+        if isinstance(value, str) or isinstance(value, unicode):
+            return unicode(self) == value
+
+        if isinstance(value, int):
+            try:
+                return value == int(self)
+            except (ValueError, TypeError):
+                return False
+
+        if isinstance(value, self.__class__):
+            return value.node.text == self.node.text
+
+        return False
 
 
 def parse(file):
@@ -73,7 +91,7 @@ def parsestring(s):
 if __name__ == "__main__":
     xml = parse("fixture.xml")
     print xml.name
-    print xml.hair["style"] 
+    print xml.hair["style"]
     print xml.like
 
     print len(xml.name)
