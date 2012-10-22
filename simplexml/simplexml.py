@@ -73,6 +73,9 @@ class XMLNode(object):
             except (ValueError, TypeError):
                 return False
 
+        if isinstance(value, self.__class__):
+            return value.node.text == self.node.text
+
         return False
 
 
