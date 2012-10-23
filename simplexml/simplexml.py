@@ -35,6 +35,9 @@ class XMLTree(object):
         return self.nodes[attr]
 
     def __getitem__(self, key):
+        if (isinstance(key, int)):
+            return self.node.attrib.keys()[key]
+
         return self.node.attrib.get(key)
 
     def __len__(self):
@@ -46,6 +49,8 @@ class XMLNode(object):
         self.node = node
 
     def __getitem__(self, key):
+        if (isinstance(key, int)):
+            return self.node.attrib.keys()[key]
         return self.node.attrib.get(key)
 
     def __unicode__(self):
