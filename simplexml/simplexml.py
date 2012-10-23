@@ -91,16 +91,3 @@ def parse(file):
 
 def parsestring(s):
     return parse(StringIO(s))
-
-
-if __name__ == "__main__":
-    xml = parse("fixture.xml")
-    print xml.name
-    print xml.hair["style"]
-    print xml.like
-
-    print len(xml.name)
-    print len(xml.like)
-
-    for like in xml.like:
-        print "I like %s." % like
