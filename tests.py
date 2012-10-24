@@ -1,5 +1,5 @@
 import unittest
-import simplexml
+import kissxml 
 
 class TestSimpleXML(unittest.TestCase):
     def assertXMLHasProperties(self, xml, properties):
@@ -9,7 +9,7 @@ class TestSimpleXML(unittest.TestCase):
             else:
                 value, attrs = value, {}
             actual = getattr(xml, propname)
-            if isinstance(actual, simplexml.XMLTree):
+            if isinstance(actual, kissxml.XMLTree):
                 self.assertTrue(isinstance(value, dict), 'Expected dictionary, got %s (value: %s)' % (type(actual), actual))
                 self.assertXMLHasProperties(actual, value)
             elif isinstance(actual, list):
@@ -21,9 +21,9 @@ class TestSimpleXML(unittest.TestCase):
                 actualattr = getattr(xml, propname)[attrname]
                 self.assertEquals(attrvalue, actualattr, 'Expected attribute value "%s", got "%s"' % (attrvalue, actualattr))
 
-    def test_simplexml(self):
+    def test_kissxml(self):
         for name, vals in self.get_tests().iteritems():
-            self.assertXMLHasProperties(simplexml.parsestring(vals[1]), vals[0])
+            self.assertXMLHasProperties(kissxml.parsestring(vals[1]), vals[0])
 
     def get_tests(self):
         # Dictionary of tests, keyed by test name.
