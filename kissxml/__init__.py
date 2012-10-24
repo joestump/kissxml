@@ -1,4 +1,4 @@
-from .simplexml import parse, parsestring, XMLTree, XMLNode
-
+from .xml import XMLTree, XMLNode
+from .parser import parse, parsestring
 
 __all__ = ('parse', 'parsestring', 'XMLTree', 'XMLNode', )
