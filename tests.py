@@ -35,5 +35,18 @@ class TestSimpleXML(unittest.TestCase):
         }
 
 
+class TestXMLNodeGetItem(unittest.TestCase):
+    def setUp(self):
+        self.xml = kissxml.parsestring('<xml test="attribute"><child></child></xml>')
+
+    def test_in(self):
+        self.assertTrue('test' in self.xml)
+        self.assertFalse('test-non-existant' in self.xml)
+
+    def test_key(self):
+        self.assertEquals(self.xml['test'], 'attribute')
+        self.assertEquals(self.xml['test-non-existant'], None)
+
+
 if __name__ == '__main__':
     unittest.main()
