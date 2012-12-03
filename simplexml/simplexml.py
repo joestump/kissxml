@@ -7,6 +7,21 @@ try:
 except ImportError:
     from StringIO import StringIO
 
+class FactoryNode(object):
+    _classes = {}
+
+    @classmethod
+    def create_class(cls, node, parent):
+        key = (node, parent)
+        if not cls._classes.has_key(key):
+            cls._classes[key] = type(node.tag, (parent,), {})
+        return cls._classes[key]
+
+    @classmethod
+    def create_instance(cls, node, parent):
+        return cls.create_class(node, parent)(node)
+
+
 
 class XMLTree(object):
     def __init__(self, node):
@@ -14,7 +29,7 @@ class XMLTree(object):
         self.node = node
         for n in node:
             if len(n.getchildren()):
-                xmlnode = XMLTree(n)
+                xmlnode = FactoryNode.create_instance(n, XMLTree)
             else:
                 xmlnode = XMLNode(n)
             if n.tag in self.nodes:
@@ -24,6 +39,12 @@ class XMLTree(object):
                     self.nodes[n.tag].append(xmlnode)
             else:
                 self.nodes[n.tag] = xmlnode
+
+    def trait_names(self):
+        """
+        used to work with tabs in ipython and ipdb
+        """
+        return self.nodes
 
     def __unicode__(self):
         return unicode(dict((k, str(v)) for k, v in self.nodes.iteritems()))
@@ -42,6 +63,13 @@ class XMLTree(object):
 
     def __len__(self):
         return len(self.nodes)
+
+    def __repr__(self):
+        return unicode(self.node).encode('utf-8')
+
+    @property
+    def tag_name(self):
+        return unicode(self.node.tag).encode('utf-8')
 
 
 class XMLNode(object):
