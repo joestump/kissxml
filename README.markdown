@@ -4,7 +4,7 @@ When I started working in Python I'd heard rumors that parsing XML was kind of a
 
 # Usage
 
-    from simplexml import parse
+    from kissxml import parse
     xml = parse("person.xml")
     print xml.name.first
     print xml.name.last

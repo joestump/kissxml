@@ -1,11 +1,8 @@
 try:
-    import xml.etree.cElementTree as ET
-except ImportError:
-    import xml.etree.ElementTree  as ET
-try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
+
 
 class FactoryNode(object):
     _classes = {}
@@ -13,14 +10,13 @@ class FactoryNode(object):
     @classmethod
     def create_class(cls, node, parent):
         key = (node, parent)
-        if not cls._classes.has_key(key):
+        if not key in cls._classes:
             cls._classes[key] = type(node.tag, (parent,), {})
         return cls._classes[key]
 
     @classmethod
     def create_instance(cls, node, parent):
         return cls.create_class(node, parent)(node)
-
 
 
 class XMLTree(object):
@@ -58,7 +54,6 @@ class XMLTree(object):
     def __getitem__(self, key):
         if (isinstance(key, int)):
             return self.node.attrib.keys()[key]
-
         return self.node.attrib.get(key)
 
     def __len__(self):
