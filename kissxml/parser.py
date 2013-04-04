@@ -9,7 +9,6 @@ except ImportError:
         try:
             import elementtree.ElementTree as ET
         except ImportError:
-            import ipdb; ipdb.set_trace()
             import xml.etree.ElementTree as ET  # Python 2.5
 
 
