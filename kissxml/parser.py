@@ -3,11 +3,14 @@ from . import XMLTree
 try:
     import cElementTree as ET
 except ImportError:
-    import lxml.etree as ET
-except ImportError:
-    import elementtree.ElementTree as ET
-except ImportError:
-    import xml.etree.ElementTree as ET  # Python 2.5
+    try:
+        import lxml.etree as ET
+    except ImportError:
+        try:
+            import elementtree.ElementTree as ET
+        except ImportError:
+            import xml.etree.ElementTree as ET  # Python 2.5
+
 
 try:
     from cStringIO import StringIO

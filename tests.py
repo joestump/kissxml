@@ -1,5 +1,6 @@
 import unittest
-import kissxml 
+import kissxml
+
 
 class TestSimpleXML(unittest.TestCase):
     def assertXMLHasProperties(self, xml, properties):
@@ -33,6 +34,25 @@ class TestSimpleXML(unittest.TestCase):
             'basic': ({'name': 'Joe Stump', 'hair': ('Brown', {'style': 'buzzed'}), 'like': ['Beer', 'Bikes', 'Computers']}, '<?xml version="1.0"?><test><name>Joe Stump</name><hair style="buzzed">Brown</hair><like>Beer</like><like>Bikes</like><like>Computers</like></test>'),
             'subitem_name_conflict': ({'type': 'Foo', 'properties': {'type': 'properties', 'foo': 'bar'}}, '<?xml version="1.0"?><item><type>Foo</type><properties><type>properties</type><foo>bar</foo></properties></item>')
         }
+
+
+class TestXMLNodeComparison(unittest.TestCase):
+    def setUp(self):
+        self.xml = kissxml.parsestring('''<?xml version="1.0" encoding="UTF-8"?>
+            <test>
+                <string>Test</string>
+                <integer>123</integer>
+            </test>
+            ''')
+
+    def test_strings(self):
+        self.assertEquals('Test', self.xml.string)
+        self.assertEquals(u'Test', self.xml.string)
+        self.assertNotEquals(123, self.xml.string)
+
+    def test_integers(self):
+        self.assertNotEquals('Test', self.xml.integer)
+        self.assertEquals(123, self.xml.integer)
 
 
 class TestXMLNodeGetItem(unittest.TestCase):
